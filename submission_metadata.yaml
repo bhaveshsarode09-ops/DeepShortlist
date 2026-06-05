@@ -1,0 +1,38 @@
+# submission_metadata.yaml — DeepShortlist
+# Fill in all fields before submitting.
+# Mirror these values exactly in the portal submission form.
+
+team_name: "DeepShortlist"
+
+primary_contact:
+  name: "Bhavesh Sarode"
+  email: ""          # your registered email
+  phone: ""          # your phone number
+
+github_repository: "https://github.com/bhaveshsarode09-ops/DeepShortlist"
+
+sandbox_link: ""     # Google Colab / HuggingFace Spaces / Streamlit link
+                     # See submission_spec.md Section 10.5
+
+ai_tools_declared:
+  - Claude
+
+compute_environment: "Google Colab / CPU runtime, Python 3.10, 12 GB RAM"
+
+team_members:
+  - name: "Bhavesh Sarode"
+    email: ""
+
+methodology_summary: >
+  DeepShortlist is a 4-stage CPU-native ranking pipeline.
+  Stage 1: FAISS-accelerated semantic first-pass using all-MiniLM-L6-v2 embeddings
+  retrieves the top-2000 candidates by cosine similarity to the JD.
+  Stage 2: Each candidate in the pool is scored on 6 dimensions —
+  semantic fit (30%), required skill coverage (20%), career trajectory (15%),
+  availability/behavioral signals from 23 redrob_signals (20%),
+  GitHub/platform engagement (10%), and location (5%).
+  Penalty multipliers are applied for wrong job families, consulting-only
+  backgrounds, disqualified domains, and research-only profiles.
+  Stage 3: A multi-rule honeypot detector eliminates impossible profiles
+  before ranking. Stage 4: Fact-based, tier-aware reasoning is generated
+  for each of the final 100 candidates without hallucination.

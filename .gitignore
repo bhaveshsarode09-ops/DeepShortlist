@@ -1,0 +1,14 @@
+__pycache__/
+*.pyc
+*.pyo
+.env
+.venv
+venv/
+*.egg-info/
+candidates.jsonl
+candidates.jsonl.gz
+output/*.csv
+.DS_Store
+*.pt
+*.bin
+sentence_transformers/
