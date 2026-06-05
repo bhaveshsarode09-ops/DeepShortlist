@@ -11,13 +11,13 @@ primary_contact:
 
 github_repository: "https://github.com/bhaveshsarode09-ops/DeepShortlist"
 
-sandbox_link: ""     # Google Colab / HuggingFace Spaces / Streamlit link
+sandbox_link: "https://colab.research.google.com/drive/1_PLACEHOLDER_COLAB_LINK_HERE"     # Google Colab / HuggingFace Spaces / Streamlit link
                      # See submission_spec.md Section 10.5
 
 ai_tools_declared:
   - Claude
 
-compute_environment: "Google Colab / CPU runtime, Python 3.10, 12 GB RAM"
+compute_environment: "Google Colab CPU runtime, Python 3.10, 12 GB RAM, no GPU"
 
 team_members:
   - name: "Bhavesh Sarode"
