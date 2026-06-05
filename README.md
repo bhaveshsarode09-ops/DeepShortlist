@@ -1,4 +1,4 @@
-# 🎯 DeepShortlist
+#  DeepShortlist
 
 **Intelligent Candidate Ranking System**  
 *India Runs Hackathon 2026 · Redrob AI · Track 1: Data & AI Challenge*
@@ -93,8 +93,8 @@ candidates.jsonl.gz (100K)
 |---|---|---|
 | Runtime | ≤ 5 min | ~2–3 min on 16 GB CPU |
 | Memory | ≤ 16 GB | ~2.5 GB peak (embeddings matrix) |
-| Compute | CPU only | ✅ No GPU used |
-| Network | Off during ranking | ✅ All models local |
+| Compute | CPU only |  No GPU used |
+| Network | Off during ranking |  All models local |
 
 **Speed breakdown:**
 - FAISS index build: ~90s for 100K candidates (batch encoding)
@@ -197,7 +197,7 @@ Conservative enough to avoid false positives, strict enough to catch all 6 detec
 | Vector Search | `faiss-cpu` (IndexFlatIP) |
 | Data | `pandas`, `numpy` |
 | Scoring | Pure Python + NumPy (vectorised) |
-| No external APIs | ✅ Fully offline during ranking |
+| No external APIs | Fully offline during ranking |
 
 ---
 
