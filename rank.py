@@ -90,16 +90,16 @@ def load_candidates(path: str) -> list[dict]:
 # Output validator (mirrors validate_submission.py logic)
 # ---------------------------------------------------------------------------
 
-def quick_validate(df: pd.DataFrame, out_path: str) -> bool:
+def quick_validate(df: pd.DataFrame, out_path: str, top_k: int = 100) -> bool:
     """Quick sanity check before saving."""
     ok = True
 
-    if len(df) != 100:
-        logger.error(f"Expected 100 rows, got {len(df)}")
+    if len(df) != top_k:
+        logger.error(f"Expected {top_k} rows, got {len(df)}")
         ok = False
 
-    if set(df["rank"].tolist()) != set(range(1, 101)):
-        logger.error("Ranks 1-100 not all present exactly once")
+    if set(df["rank"].tolist()) != set(range(1, top_k + 1)):
+        logger.error(f"Ranks 1-{top_k} not all present exactly once")
         ok = False
 
     if df["candidate_id"].duplicated().any():
@@ -212,7 +212,7 @@ Examples:
 
     # Validate before saving
     logger.info("Validating output…")
-    if not quick_validate(results_df, args.out):
+    if not quick_validate(results_df, args.out, top_k=args.top_k):
         logger.error("Validation failed — output not saved. Check errors above.")
         sys.exit(1)
     logger.info("Validation passed ✓")

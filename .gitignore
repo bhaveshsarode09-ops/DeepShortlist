@@ -12,3 +12,6 @@ output/*.csv
 *.pt
 *.bin
 sentence_transformers/
+test_output.csv
+submission.csv
+team_*.csv
