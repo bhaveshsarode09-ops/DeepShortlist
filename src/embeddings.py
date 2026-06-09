@@ -20,6 +20,7 @@ from src.jd_config import (
     FAISS_FIRST_PASS,
     JD_TEXT,
 )
+from src.field_extractor import build_rich_text
 
 logger = logging.getLogger(__name__)
 
@@ -31,65 +32,9 @@ logger = logging.getLogger(__name__)
 def build_candidate_text(c: dict[str, Any]) -> str:
     """
     Convert a candidate record into a single text blob for embedding.
-    Weights important fields by repeating them (a simple but effective trick).
+    Uses the universal field_extractor.
     """
-    parts: list[str] = []
-
-    # Current title and role (repeated for emphasis)
-    title = c.get("current_title") or c.get("title") or ""
-    if title:
-        parts.append(title)
-        parts.append(title)  # repeat for weight
-
-    # Years of experience
-    yoe = c.get("years_of_experience") or c.get("years_experience") or c.get("total_experience") or ""
-    if yoe:
-        parts.append(f"{yoe} years experience")
-
-    # Skills (repeated for weight — most discriminative field)
-    skills = c.get("skills") or []
-    if isinstance(skills, list):
-        skill_text = " ".join(str(s) for s in skills)
-    else:
-        skill_text = str(skills)
-    if skill_text:
-        parts.append(skill_text)
-        parts.append(skill_text)  # repeat
-
-    # Work history — titles and descriptions
-    work_history = c.get("work_history") or c.get("experience") or []
-    for job in work_history[:5]:  # cap at 5 to keep text manageable
-        if isinstance(job, dict):
-            job_title  = job.get("title") or job.get("role") or ""
-            company    = job.get("company") or ""
-            desc       = job.get("description") or job.get("summary") or ""
-            if job_title:
-                parts.append(job_title)
-            if company:
-                parts.append(company)
-            if desc:
-                parts.append(str(desc)[:300])  # truncate long descriptions
-
-    # Education
-    education = c.get("education") or []
-    for edu in education[:2]:
-        if isinstance(edu, dict):
-            degree  = edu.get("degree") or ""
-            field   = edu.get("field") or edu.get("specialization") or ""
-            inst    = edu.get("institution") or edu.get("university") or ""
-            parts.append(f"{degree} {field} {inst}".strip())
-
-    # Bio / summary
-    bio = c.get("bio") or c.get("summary") or c.get("about") or ""
-    if bio:
-        parts.append(str(bio)[:400])
-
-    # Location
-    loc = c.get("location") or c.get("city") or ""
-    if loc:
-        parts.append(str(loc))
-
-    return " ".join(p for p in parts if p.strip())
+    return build_rich_text(c)
 
 
 # ---------------------------------------------------------------------------
@@ -111,7 +56,11 @@ class EmbeddingEngine:
         logger.info(f"Loading embedding model: {model_name}")
         t0 = time.time()
         self.model = SentenceTransformer(model_name)
-        self.dim   = self.model.get_sentence_embedding_dimension()
+        # Handle different sentence-transformers versions
+        if hasattr(self.model, 'get_sentence_embedding_dimension'):
+            self.dim = self.model.get_sentence_embedding_dimension()
+        else:
+            self.dim = self.model.get_embedding_dimension()
         logger.info(f"Model loaded in {time.time()-t0:.1f}s  (dim={self.dim})")
 
         self._jd_vec: np.ndarray | None = None
